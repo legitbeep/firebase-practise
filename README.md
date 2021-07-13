@@ -1,4 +1,5 @@
 # firebasics
+`React` `Firebase` `HTML` `CSS` `Javascript`
 
 ## In this repo I have built projects for practising firebase.
 
