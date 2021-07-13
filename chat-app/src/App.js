@@ -10,13 +10,7 @@ import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 firebase.initializeApp({
     // config for project
-    apiKey: "AIzaSyBYBTbE4Aks8M91dD2DDnfe2dy0HX0jXFY",
-    authDomain: "chat-app-9e60e.firebaseapp.com",
-    projectId: "chat-app-9e60e",
-    storageBucket: "chat-app-9e60e.appspot.com",
-    messagingSenderId: "24605765766",
-    appId: "1:24605765766:web:45170a5ae10332c3a1e107",
-    measurementId: "G-BQPY6ZNVYR"
+    // App wont work since I have removed these config files
 })
 
 const auth = firebase.auth(); // authentication
