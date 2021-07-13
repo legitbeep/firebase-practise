@@ -46,43 +46,73 @@ const SignIn = () => {
   }
 
   return (
-    <button onClick={signInWithGoogle}>Sign In</button>
+    <button className="sign-in" onClick={signInWithGoogle}>Sign In</button>
   )
 }
 
 const SignOut = () => {
   return auth.currentUser && (
-    <button onClick={() => auth.signOut()}>Sign Out</button>
+    <button className="sign-out" onClick={() => auth.signOut()}>Sign Out</button>
   )
 }
 
 const ChatRoom = () => {
+
+  const dummy = React.useRef();
   
   const messagesRef = firestore.collection('messages');
   const query = messagesRef.orderBy('createdAt').limit(25);
 
   // now listen to updates in real time by using this query
-  const [messages] = useCollectionData(query, {idField : "id"});
-  console.log(messages);
+  const [messages] = useCollectionData(query, {idField : 'id'});
+
+  const [formValue, setFormValue] = React.useState('');
+
+  const sendMessage = async(e) => {
+    e.preventDefault();
+    // id and photo from current user
+    const {uid, photoURL} = auth.currentUser;
+
+    await messagesRef.add({
+      text : formValue,
+      createdAt : firebase.firestore.FieldValue.serverTimestamp(),
+      uid,
+      photoURL
+    });
+
+    setFormValue("");
+    dummy.current.scrollIntoView({ behavior : "smooth" });
+  }
+
+
 
   return (
     <>
-        <div>
+        <main>
           { messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} /> )}
-        </div>
-        <div>
+          <div ref={dummy}>
 
-        </div>
+          </div>
+        </main>
+        <form onSubmit={sendMessage}>
+          <input value={formValue} onChange={(e) => setFormValue(e.target.value)} />
+          <button type="submit">💬</button>
+        </form>
     </>
   )
 }
 
-const ChatMessage = ({ key, message}) => {
+const ChatMessage = ({ key, message }) => {
 
-  const { text, uid } = message;
+  const { text, uid, photoURL } = message;
+
+  const messageClass = uid === auth.currentUser.uid ? "sent" : "received"; 
 
   return (
-    <p id={uid} >{text}</p>
+    <div className={`message ${messageClass}`}>
+      {photoURL &&  <img src={photoURL} className="avatar" alt="profile" />}
+      <p >{text}</p>
+    </div>
   )
 }
 
